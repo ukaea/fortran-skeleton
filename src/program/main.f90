@@ -19,7 +19,7 @@
 ! <https://www.gnu.org/licenses/>.
 !
 
-program PROGRAMNAME
+program program_name
   !* Author:
   !  Date:
   !  License: LGPLv3 or later
@@ -37,4 +37,4 @@ program PROGRAMNAME
   ! Run your program...
   
 
-end program PROGRAMNAME
+end program program_name

@@ -32,17 +32,32 @@ module variable_kinds
   ! not available then the parameter value will be negative and any
   ! declarations using it will cause a compiler error.
   !
+  ! Defining your kinds this way ensures portability. Using literal
+  ! integers is not reliable as the value for each kind is not
+  ! specified in the Fortran standard and can vary between
+  ! compilers. While you can use the `real32`, `real64`, `real128`,
+  ! `int8`, `int16`, `int32`, and `int64` parameters available in the
+  ! intrinsic
+  ! [iso_fortran_env](http://fortranwiki.org/fortran/show/iso_fortran_env)
+  ! module for this purpose, [this is not
+  ! recommended](https://software.intel.com/en-us/blogs/2017/03/27/doctor-fortran-in-it-takes-all-kinds). These
+  ! parameters specify the kinds of reals and integers which take up
+  ! 8/16/32/64/128 bits in memory and dont tell you anything about how
+  ! information is being stored. As such, they are not guaranteed to
+  ! provide the desired level of precision and range of possible
+  ! values.
+  !
 
   integer, parameter :: hp = selected_real_kind(3, 4)
-    !! Real kind for half precision
+    !! Real kind for half precision (3 significant figures)
   integer, parameter :: sp = selected_real_kind(7, 38)
-    !! Real kind for single precision
+    !! Real kind for single precision (7 significant figures)
   integer, parameter :: dp = selected_real_kind(15, 307)
-    !! Real kind for double precision
+    !! Real kind for double precision (15 significant figures)
   integer, parameter :: xp = selected_real_kind(19, 4931)
-    !! Real kind for extended precision
+    !! Real kind for extended precision (19 significant figures)
   integer, parameter :: qp = selected_real_kind(34, 4931)
-    !! Real kind for quad precision
+    !! Real kind for quad precision (34 significant figures)
   
   integer, parameter :: i2  = selected_int_kind(2)
     !! Integer kind for values \( \in (-10^2, 10^2) \)

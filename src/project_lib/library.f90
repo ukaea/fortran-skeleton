@@ -19,7 +19,7 @@
 ! <https://www.gnu.org/licenses/>.
 !
 
-module LIBRARY
+module library
   !* Author:
   !  Date:
   !  License: LGPLv3 or later
@@ -32,12 +32,27 @@ module LIBRARY
   implicit none
   private
 
-  ! Variable and type declarations, procedure interfaces
-
+  ! Variable declarations, type declarations, and procedure interfaces
+  real(dp), parameter :: pi = 4._dp * atan(1._dp)
+  
   ! Mark public/protected variables, types, and procedures
+  public :: a_procedure
   
 contains
 
   ! Function and subroutine definitions
+
+  elemental function a_procedure(x)
+    !* Author:
+    !  Date:
+    !
+    ! Documentation for this function stub
+    !
+    real(dp), intent(in) :: x
+      !! An input variable
+    real(dp) :: a_procedure
+    
+    a_procedure = sin(pi*(x - 2._dp))
+  end function a_procedure
   
-end module LIBRARY
+end module library

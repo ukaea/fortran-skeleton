@@ -1,5 +1,5 @@
 !
-! library.f90  
+! library_test.pf  
 ! This file is part of PROJECTNAME.
 !
 ! Copyright YEAR AUTHOR <EMAIL> [AUTHOR2 <EMAIL2>, ...]
@@ -18,41 +18,19 @@
 ! License along with this program.  If not, see
 ! <https://www.gnu.org/licenses/>.
 !
-
-module library
-  !* Author:
-  !  Date:
-  !  License: LGPLv3 or later
-  !
-  ! A description of the contents of this module.
-  !
-
-  ! Import modules...
-  use variable_kinds, only: sp, dp, i4
+module library_test
+  use variable_kinds, only: dp
+  use library, only: a_procedure
+  use pfunit_mod
   implicit none
-  private
 
-  ! Variable declarations, type declarations, and procedure interfaces
-  real(dp), parameter :: pi = 4._dp * atan(1._dp)
-  
-  ! Mark public/protected variables, types, and procedures
-  public :: a_procedure
-  
+  real(dp), parameter :: tol = sqrt(epsilon(1._dp))
+
 contains
 
-  ! Function and subroutine definitions
+  @Test
+  subroutine test_a_procedure()
+    @assertEqual(a_procedure(0._dp), 0._dp, tolerance=tol)
+  end subroutine test_a_procedure
 
-  elemental function a_procedure(x)
-    !* Author:
-    !  Date:
-    !
-    ! Documentation for this function stub
-    !
-    real(dp), intent(in) :: x
-      !! An input variable
-    real(dp) :: a_procedure
-    
-    a_procedure = sin(2._dp*pi*(x - 0.5_dp))
-  end function a_procedure
-  
-end module library
+end module library_test

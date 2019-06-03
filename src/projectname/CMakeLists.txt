@@ -29,30 +29,23 @@
 FILE(GLOB_RECURSE sources *.f90 *.F90)
 
 # Define the executable in terms of the source files
-ADD_EXECUTABLE(${MAIN_EXE} ${sources})
+ADD_EXECUTABLE(${PROJECT_NAME} ${sources})
+SET_PROPERTY(TARGET ${PROJECT_NAME} PROPERTY
+  Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/private_modules)
+TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME}
+  PRIVATE
+    "${CMAKE_CURRENT_BINARY_DIR}/private_modules"
+  )
+TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PRIVATE ${DEFAULT_Fortran_FLAGS})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+  PRIVATE
+    ${PROJECT_NAME}::environment ${PROJECT_NAME}::${PROJECT_NAME}_lib
+  )
 
-#####################################################
-# Add the needed libraries and special compiler flags
-#####################################################
-
-# This links the executable to the libraries in the project
-TARGET_LINK_LIBRARIES(${MAIN_EXE} ${PROJECT_LIB})
-TARGET_LINK_LIBRARIES(${MAIN_EXE} ${ENV_LIB})
-
-# Uncomment if you need to link to BLAS and LAPACK
-#TARGET_LINK_LIBRARIES(${MAIN_EXE} ${BLAS_LIBRARIES}
-#                                ${LAPACK_LIBRARIES}
-#                                ${CMAKE_THREAD_LIBS_INIT})
-
-# Uncomment if you have parallization
-#IF(USE_OPENMP)
-#    SET_TARGET_PROPERTIES(${MAIN_EXE} PROPERTIES
-#                          COMPILE_FLAGS "${OpenMP_Fortran_FLAGS}"
-#                          LINK_FLAGS "${OpenMP_Fortran_FLAGS}")
-#ELSEIF(USE_MPI)
-#    SET_TARGET_PROPERTIES(${MAIN_EXE} PROPERTIES
-#                          COMPILE_FLAGS "${MPI_Fortran_COMPILE_FLAGS}"
-#                          LINK_FLAGS "${MPI_Fortran_LINK_FLAGS}")
-#    INCLUDE_DIRECTORIES(${MPI_Fortran_INCLUDE_PATH})
-#    TARGET_LINK_LIBRARIES(${MAIN_EXE} ${MPI_Fortran_LIBRARIES})
-#ENDIF(USE_OPENMP)
+INSTALL(TARGETS ${PROJECT_NAME}
+  EXPORT ${PROJECT_NAME}_lib_installation
+  ARCHIVE DESTINATION ${LIBDIR}
+  LIBRARY DESTINATION ${LIBDIR}
+  PUBLIC_HEADER DESTINATION ${INCDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)

@@ -32,9 +32,13 @@ program program_name
   implicit none
 
   ! Decalare variables...
-
+  real(dp)    :: double_precision_var
+  real(sp)    :: single_precision_var
+  integer(i4) :: short_var
   
   ! Run your program...
-  
+  double_precision_var = 1._dp
+  single_precision_var = 2._sp
+  short_var = int(real(double_precision_var, sp) + single_precision_var, i4)
 
 end program program_name

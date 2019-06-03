@@ -25,40 +25,31 @@
 # Copyright (c) 2018 Seth M. Morton
 #
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.5)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
 
-PROJECT(projectname)
-ENABLE_LANGUAGE(Fortran)
-
-# Set the version of your software
-SET(VERSION 0.0.1)
+PROJECT(projectname VERSION 0.0.1
+  DESCRIPTION "A Fortran project"
+  LANGUAGES Fortran)
+#ENABLE_LANGUAGE(Fortran)
 
 # Add our local modlues to the module path
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
+SET(CMAKE_PREFIX_PATH "/home/cmacmack/.local/opt/pfunit/pfunit-cmake")
 
 # All new projects should use Fortran 90 features
 IF(NOT CMAKE_Fortran_COMPILER_SUPPORTS_F90)
     MESSAGE(FATAL_ERROR "Fortran compiler does not support F90")
 ENDIF(NOT CMAKE_Fortran_COMPILER_SUPPORTS_F90)
 
-# Optionally set a parallelization library. Uncomment as desired.
-#OPTION(USE_MPI "Use the MPI library for parallelization" OFF)
-#OPTION(USE_OPENMP "Use OpenMP for parallelization" OFF)
-
-# This INCLUDE statement executes code that sets the compile flags for DEBUG,
-# RELEASE, and TESTING.  You should  review this file and make sure the flags 
-# are to your liking.
-INCLUDE(${CMAKE_MODULE_PATH}/SetFortranFlags.cmake) 
-
-# Locate and set parallelization libraries.  There are some CMake peculiarities
-# taken care of here, such as the fact that the FindOpenMP routine doesn't know
-# about Fortran. Uncomment if using parallel programming features.
-#INCLUDE(${CMAKE_MODULE_PATH}/SetParallelizationLibrary.cmake)
-
-# Setup the LAPACK libraries.  This also takes care of peculiarities, such as
-# the fact the searching for MKL requires a C compiler, and that the results
-# are not stored in the cache.  Uncomment if using LAPACK routines.
-#INCLUDE(${CMAKE_MODULE_PATH}/SetUpLAPACK.cmake)
+# This INCLUDE statement executes code that sets the compile flags for
+# DEBUG, RELEASE, and TESTING, stored in the variables
+# DEFAULT_Fortran_FLAGS_{DEBUG,RELEASE,TESTING}.  The flags for your
+# build type are available in the variable DEFAULT_Fortran_FLAGS.  You
+# should review this file and make sure the flags are to your liking.
+# DEFAULT_Fortran_FLAGS should be used to set flags for each target
+# individually (rather than globally for the whole project).  This
+# will allow for better granularity of control over compiler options.
+INCLUDE(${CMAKE_MODULE_PATH}/SetFortranFlags.cmake)
 
 # There is an error in CMAKE with this flag for pgf90.  Unset it
 GET_FILENAME_COMPONENT(FCNAME ${CMAKE_Fortran_COMPILER} NAME)
@@ -70,39 +61,56 @@ ENDIF(FCNAME STREQUAL "pgf90")
 # Define the actual files and folders that make up the build
 ############################################################
 
-# Define the executable name
-SET(MAIN_EXE ${CMAKE_PROJECT_NAME})
-
-# Define the library names
-SET(PROJECT_LIB project_lib)
-SET(ENV_LIB environment_lib)
+INCLUDE(GNUInstallDirs)
 
 # Define the name of the unit test binary
 SET(TEST_EXE unittests)
-
-# Define some directories
-SET(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
-SET(LIB_DIR ${CMAKE_SOURCE_DIR}/lib)
-SET(INC_DIR ${CMAKE_SOURCE_DIR}/include)
-SET(BIN_DIR ${CMAKE_SOURCE_DIR}/bin)
-SET(SRC_MAIN ${SRC_DIR}/${MAIN_EXE})
-SET(SRC_LIB ${SRC_DIR}/${PROJECT_LIB})
-SET(SRC_ENV ${SRC_DIR}/${ENV_LIB})
-SET(SRC_TESTS ${CMAKE_SOURCE_DIR}/tests)
-
-SET(CMAKE_Fortran_MODULE_DIRECTORY ${INC_DIR}) # Have the .mod files placed in the include folder
-SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
-SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_DIR})
-
-# The source for the main binary
-ADD_SUBDIRECTORY(${SRC_MAIN})
+SET(LIBDIR ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME})
+SET(INCDIR ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
 
 # The source for the libraries
-ADD_SUBDIRECTORY(${SRC_LIB})
-ADD_SUBDIRECTORY(${SRC_ENV})
+ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/src/environment_lib)
+ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/src/project_lib)
+
+# The source for the main binary
+ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME})
 
 # Add the source for the unit tests
-ADD_SUBDIRECTORY(${SRC_TESTS})
+#ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tests)
+
+# Build the documentation
+
+# Export this project for use by others
+SET(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+INSTALL(EXPORT ${PROJECT_NAME}_installation
+  FILE
+    ${PROJECT_NAME}Targets.cmake
+  NAMESPACE
+    ${PROJECT_NAME}::
+  DESTINATION
+    ${INSTALL_CONFIGDIR}
+  )
+
+INCLUDE(CMakePackageConfigHelpers)
+WRITE_BASIC_PACKAGE_VERSION_FILE(
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+CONFIGURE_PACKAGE_CONFIG_FILE(${CMAKE_CURRENT_LIST_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
+    PATH_VARS INSTALL_CONFIGDIR
+)
+
+#Install the config and configversion files
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+    DESTINATION ${INSTALL_CONFIGDIR}
+)
+
 
 # Add a distclean target to the Makefile
 ADD_CUSTOM_TARGET(distclean 

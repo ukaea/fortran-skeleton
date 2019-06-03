@@ -66,6 +66,8 @@ contains
     character(len=*), intent(in) :: input
       !! Some variable used to build objects of your derived type
     type(derived_type)           :: constructor
+    write(*,*) input
+    constructor = derived_type()
   end function constructor
   
 end module type_library

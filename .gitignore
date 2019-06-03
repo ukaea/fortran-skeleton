@@ -2,5 +2,9 @@
 *.o
 *.mod
 public/
+bin/
+build/
+include/
+lib/
 *.a
 *.so

@@ -34,7 +34,6 @@ PROJECT(projectname VERSION 0.0.1
 
 # Add our local modlues to the module path
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
-SET(CMAKE_PREFIX_PATH "/home/cmacmack/.local/opt/pfunit/pfunit-cmake")
 
 # All new projects should use Fortran 90 features
 IF(NOT CMAKE_Fortran_COMPILER_SUPPORTS_F90)
@@ -76,7 +75,7 @@ ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/src/project_lib)
 ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME})
 
 # Add the source for the unit tests
-#ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tests)
+ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tests)
 
 # Build the documentation
 

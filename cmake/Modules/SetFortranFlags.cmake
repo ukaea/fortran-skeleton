@@ -35,19 +35,25 @@ ENDIF(BT STREQUAL "RELEASE")
 # If the compiler flags have already been set, return now
 #########################################################
 
+SET(RECOMPUTE_COMPILER_FLAGS FALSE CACHE BOOLEAN
+  "Whether to compute compiler flags again, even if build type is unchanged.")
+
 IF(DEFAULT_Fortran_FLAGS_RELEASE AND DEFAULT_Fortran_FLAGS_TESTING AND
-   DEFAULT_Fortran_FLAGS_DEBUG AND DEFAULT_Fortran_FLAGS)
+    DEFAULT_Fortran_FLAGS_DEBUG AND DEFAULT_Fortran_FLAGS AND
+    DEFAULT_Fortran_FLAGS_BASIC AND CMAKE_BUILD_TYPE STREQUAL
+    BUILD_TYPE_USED_IN_FLAGS AND NOT RECOMPUTE_COMPILER_FLAGS)
   SEPARATE_ARGUMENTS(DEFAULT_Fortran_FLAGS)
+  SEPARATE_ARGUMENTS(DEFAULT_Fortran_FLAGS_BASIC)
   SEPARATE_ARGUMENTS(DEFAULT_Fortran_FLAGS_RELEASE)
   SEPARATE_ARGUMENTS(DEFAULT_Fortran_FLAGS_TESTING)
   SEPARATE_ARGUMENTS(DEFAULT_Fortran_FLAGS_DEBUG)
-  RETURN ()
-ENDIF(DEFAULT_Fortran_FLAGS_RELEASE AND DEFAULT_Fortran_FLAGS_TESTING AND
-      DEFAULT_Fortran_FLAGS_DEBUG AND DEFAULT_Fortran_FLAGS)
+  RETURN()
+ENDIF()
 
 UNSET(DEFAULT_Fortran_FLAGS_RELEASE CACHE)
 UNSET(DEFAULT_Fortran_FLAGS_TESTING CACHE)
-UNSET(DEFAULT_Fortran_FLAGS_DEBUT CACHE)
+UNSET(DEFAULT_Fortran_FLAGS_DEBUG CACHE)
+UNSET(DEFAULT_Fortran_FLAGS_BASIC CACHE)
 UNSET(DEFAULT_Fortran_FLAGS CACHE)
 
 ########################################################################
@@ -63,7 +69,7 @@ UNSET(DEFAULT_Fortran_FLAGS CACHE)
 #####################
 
 # Don't add underscores in symbols for C-compatability
-SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS "${DEFAULT_Fortran_FLAGS}"
+SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS_BASIC "${DEFAULT_Fortran_FLAGS_BASIC}"
                  Fortran "-fno-underscoring")
 
 # There is some bug where -march=native doesn't work on Mac
@@ -73,7 +79,7 @@ ELSE()
     SET(GNUNATIVE "-march=native")
 ENDIF()
 # Optimize for the host's architecture
-SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS "${DEFAULT_Fortran_FLAGS}"
+SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS_BASIC "${DEFAULT_Fortran_FLAGS_BASIC}"
                  Fortran "-xHost"        # Intel
                          "/QxHost"       # Intel Windows
                          ${GNUNATIVE}    # GNU
@@ -81,24 +87,25 @@ SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS "${DEFAULT_Fortran_FLAGS}"
                 )
 
 # Turn on all warnings 
-SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS "${DEFAULT_Fortran_FLAGS}"
+SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS_BASIC "${DEFAULT_Fortran_FLAGS_BASIC}"
                  Fortran "-warn all" # Intel
                          "/warn:all" # Intel Windows
                          "-Wall"     # GNU
                                      # Portland Group (on by default)
                 )
-SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS "${DEFAULT_Fortran_FLAGS}"
+
+SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS_BASIC "${DEFAULT_Fortran_FLAGS_BASIC}"
                  Fortran "-Wextra"   # GNU
                 )
-SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS "${DEFAULT_Fortran_FLAGS}"
+SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS_BASIC "${DEFAULT_Fortran_FLAGS_BASIC}"
                  Fortran "-Wsurprising" # GNU
                 )
-SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS "${DEFAULT_Fortran_FLAGS}"
+SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS_BASIC "${DEFAULT_Fortran_FLAGS_BASIC}"
                  Fortran "-Wpedantic"   # GNU
                 )
 
 # Treat warnings as errors
-SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS "${DEFAULT_Fortran_FLAGS}"
+SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS_BASIC "${DEFAULT_Fortran_FLAGS_BASIC}"
                  Fortran "-warn error" # Intel
                          "/warn:error" # Intel Windows
                          "-Werror"     # GNU
@@ -106,7 +113,7 @@ SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS "${DEFAULT_Fortran_FLAGS}"
                 )
 
 # Require code to be standard-complient
-SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS "${DEFAULT_Fortran_FLAGS}"
+SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS_BASIC "${DEFAULT_Fortran_FLAGS_BASIC}"
                  Fortran "-stand=f18"   # Intel
                          "-stand=f15"   # Old versions of Intel
                          "-stand=f08"   # Even older versions of Intel
@@ -116,7 +123,7 @@ SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS "${DEFAULT_Fortran_FLAGS}"
                          "-Mstandard"   # Portland Group
                 )
 
-SEPARATE_ARGUMENTS(DEFAULT_Fortran_FLAGS)
+SEPARATE_ARGUMENTS(DEFAULT_Fortran_FLAGS_BASIC)
 
 ###################
 ### DEBUG FLAGS ###
@@ -169,9 +176,16 @@ SEPARATE_ARGUMENTS(DEFAULT_Fortran_FLAGS_DEBUG)
 
 # Optimizations
 SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS_TESTING "${DEFAULT_Fortran_FLAGS_TESTING}"
-                 Fortran REQUIRED "-O2" # All compilers not on Windows
-                                  "/O2" # Intel Windows
+                 Fortran REQUIRED "-O0" # All compilers not on Windows
+                                  "/O0" # Intel Windows
                 )
+
+# Debug symbols
+SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS_TESTING "${DEFAULT_Fortran_FLAGS_TESTING}"
+                 Fortran REQUIRED "-g" # All compilers not on Windows
+                                  "/g" # Intel Windows
+                )
+
 
 # Coverage flags (only available for GNU and Intel Windows)
 SET_COMPILE_FLAG(DEFAULT_Fortran_FLAGS_TESTING "${DEFAULT_Fortran_FLAGS_TESTING}"
@@ -233,14 +247,35 @@ SEPARATE_ARGUMENTS(DEFAULT_Fortran_FLAGS_RELEASE)
 ################################
 ### CHOOSE APPROPRIATE FLAGS ###
 ################################
-IF(BT STREQUAL "RELEASE")
-  message(RELEASE)
-  SET(DEFAULT_Fortran_FLAGS ${DEFAULT_Fortran_FLAGS} ${DEFAULT_Fortran_FLAGS_RELEASE})
-ELSEIF(BT STREQUAL "DEBUG")
-  message(DEBUG)
-  SET(DEFAULT_Fortran_FLAGS ${DEFAULT_Fortran_FLAGS} ${DEFAULT_Fortran_FLAGS_DEBUG})
-ELSEIF(BT STREQUAL "TESTING")
-  message(TESTING)
-  SET(DEFAULT_Fortran_FLAGS ${DEFAULT_Fortran_FLAGS} ${DEFAULT_Fortran_FLAGS_TESTING})
+message(${DEFAULT_Fortran_FLAGS_DEBUG})
+message(${DEFAULT_Fortran_FLAGS_TESTING})
+message(${DEFAULT_Fortran_FLAGS_RELEASE})
+message(${DEFAULT_Fortran_FLAGS_BASIC})
+IF(NOT DEFAULT_Fortran_FLAGS OR NOT CMAKE_BUILD_TYPE STREQUAL
+    BUILD_TYPE_USED_IN_FLAGS OR RECOMPUTE_COMPILER_FLAGS)
+  IF(BT STREQUAL "RELEASE")
+    SET(DEFAULT_Fortran_FLAGS ${DEFAULT_Fortran_FLAGS_BASIC}
+      ${DEFAULT_Fortran_FLAGS_RELEASE} CACHE STRING
+      "Default compiler flags to use" FORCE)
+    SET(BUILD_TYPE_Fortran_FLAGS ${DEFAULT_Fortran_FLAGS_RELEASE} CACHE STRING
+      "The Fortran flags for this build type" FORCE)
+  ELSEIF(BT STREQUAL "DEBUG")
+    SET(DEFAULT_Fortran_FLAGS ${DEFAULT_Fortran_FLAGS_BASIC}
+      ${DEFAULT_Fortran_FLAGS_DEBUG} CACHE STRING
+      "Default compiler flags to use" FORCE)
+    SET(BUILD_TYPE_Fortran_FLAGS ${DEFAULT_Fortran_FLAGS_DEBUG} CACHE STRING
+      "The Fortran flags for this build type" FORCE)
+  ELSEIF(BT STREQUAL "TESTING")
+    SET(DEFAULT_Fortran_FLAGS ${DEFAULT_Fortran_FLAGS_BASIC}
+      ${DEFAULT_Fortran_FLAGS_TESTING} CACHE STRING
+      "Default compiler flags to use" FORCE)
+    SET(BUILD_TYPE_Fortran_FLAGS ${DEFAULT_Fortran_FLAGS_TESTING} CACHE STRING
+      "The Fortran flags for this build type" FORCE)
+  ENDIF()
 ENDIF()
-
+SET(BUILD_TYPE_USED_IN_FLAGS ${BT} CACHE STRING
+  "The build type used to compute compiler flags" FORCE)
+message(${DEFAULT_Fortran_FLAGS})
+SET(RECOMPUTE_COMPILER_FLAGS FALSE CACHE BOOLEAN
+  "Whether to compute compiler flags again, even if build type is unchanged. Defaults to FALSE."
+  FORCE)

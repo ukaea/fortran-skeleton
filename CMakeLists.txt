@@ -50,6 +50,11 @@ ENDIF(NOT CMAKE_Fortran_COMPILER_SUPPORTS_F90)
 # will allow for better granularity of control over compiler options.
 INCLUDE(${CMAKE_MODULE_PATH}/SetFortranFlags.cmake)
 
+
+# Thie INCLUDE statement provides a set of functions to set up code
+# coverage reports
+INCLUDE(${CMAKE_MODULE_PATH}/CodeCoverage.cmake)
+
 # There is an error in CMAKE with this flag for pgf90.  Unset it
 GET_FILENAME_COMPONENT(FCNAME ${CMAKE_Fortran_COMPILER} NAME)
 IF(FCNAME STREQUAL "pgf90")

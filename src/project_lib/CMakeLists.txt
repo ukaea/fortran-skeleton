@@ -28,12 +28,16 @@
 # Specify sources for which the resulting module files should be
 # available to library users
 SET(public_sources type_library.f90)
+FOREACH(file ${public_sources})
+  GET_FILENAME_COMPONENT(absfile ${file} ABSOLUTE)
+  LIST(APPEND public_sources_abs ${absfile})
+ENDFOREACH()
 
 # Specify sources for which library users should not be able to access
 # the module files
 FILE(GLOB_RECURSE private_sources *.f90 *.F90)
-LIST(REMOVE_ITEM private_sources ${public_sources})
-
+LIST(REMOVE_ITEM private_sources ${public_sources_abs})
+message(${private_sources})
 # Configure target for the private components of the library
 ADD_LIBRARY(${PROJECT_NAME}_lib_private STATIC ${private_sources})
 SET_PROPERTY(TARGET ${PROJECT_NAME}_lib_private PROPERTY
@@ -63,6 +67,7 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}_lib
     ${PROJECT_NAME}::environment
   PRIVATE
     ${PROJECT_NAME}_lib_private
+    ${BUILD_TYPE_Fortran_FLAGS}
   )
 ADD_LIBRARY(${PROJECT_NAME}::${PROJECT_NAME}_lib ALIAS ${PROJECT_NAME}_lib)
 

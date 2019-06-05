@@ -79,9 +79,13 @@ program dummyprog
   i = 5
 end program dummyprog
 ")
-            TRY_COMPILE(FLAG_WORKS ${CMAKE_BINARY_DIR} ${TESTFILE}
-                COMPILE_DEFINITIONS "${flag}" OUTPUT_VARIABLE OUTPUT)
-            
+            IF(NOT flag STREQUAL "--coverage")
+              TRY_COMPILE(FLAG_WORKS ${CMAKE_BINARY_DIR} ${TESTFILE}
+                  COMPILE_DEFINITIONS "${flag}" OUTPUT_VARIABLE OUTPUT)
+            ELSE() # Hack to ensure GCOV flags work
+              TRY_COMPILE(FLAG_WORKS ${CMAKE_BINARY_DIR} ${TESTFILE}
+                  COMPILE_DEFINITIONS "${flag}" LINK_LIBRARIES "gcov" OUTPUT_VARIABLE OUTPUT)
+            ENDIF()
             # Check that the output message doesn't match any errors
             FOREACH(rx ${FAIL_REGEX})
                 IF("${OUTPUT}" MATCHES "${rx}")

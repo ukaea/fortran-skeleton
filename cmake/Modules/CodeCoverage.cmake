@@ -1,5 +1,5 @@
 #
-# CMakeLists.txt
+# CodeCoverage.cmake
 # This file is part of PROJECTNAME.
 #
 # Copyright YEAR AUTHOR <EMAIL> [AUTHOR2 <EMAIL2>, ...]

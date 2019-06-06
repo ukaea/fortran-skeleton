@@ -1,3 +1,30 @@
+#
+# SetFortranFlags.cmake
+# This file is part of PROJECTNAME.
+#
+# Copyright YEAR AUTHOR <EMAIL> [AUTHOR2 <EMAIL2>, ...]
+#  
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this program.  If not, see
+# <https://www.gnu.org/licenses/>.
+#
+
+#
+# This file is adapted from cmake_fortran_template
+# <https://github.com/SethMMorton/cmake_fortran_template>
+# Copyright (c) 2018 Seth M. Morton
+#
+
 ######################################################
 # Determine and set the Fortran compiler flags we want 
 ######################################################
@@ -247,25 +274,21 @@ SEPARATE_ARGUMENTS(DEFAULT_Fortran_FLAGS_RELEASE)
 ################################
 ### CHOOSE APPROPRIATE FLAGS ###
 ################################
-message(${DEFAULT_Fortran_FLAGS_DEBUG})
-message(${DEFAULT_Fortran_FLAGS_TESTING})
-message(${DEFAULT_Fortran_FLAGS_RELEASE})
-message(${DEFAULT_Fortran_FLAGS_BASIC})
 IF(NOT DEFAULT_Fortran_FLAGS OR NOT CMAKE_BUILD_TYPE STREQUAL
     BUILD_TYPE_USED_IN_FLAGS OR RECOMPUTE_COMPILER_FLAGS)
-  IF(BT STREQUAL "RELEASE")
+  IF(CMAKE_BUILD_TYPE STREQUAL "RELEASE")
     SET(DEFAULT_Fortran_FLAGS ${DEFAULT_Fortran_FLAGS_BASIC}
       ${DEFAULT_Fortran_FLAGS_RELEASE} CACHE STRING
       "Default compiler flags to use" FORCE)
     SET(BUILD_TYPE_Fortran_FLAGS ${DEFAULT_Fortran_FLAGS_RELEASE} CACHE STRING
       "The Fortran flags for this build type" FORCE)
-  ELSEIF(BT STREQUAL "DEBUG")
+  ELSEIF(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
     SET(DEFAULT_Fortran_FLAGS ${DEFAULT_Fortran_FLAGS_BASIC}
       ${DEFAULT_Fortran_FLAGS_DEBUG} CACHE STRING
       "Default compiler flags to use" FORCE)
     SET(BUILD_TYPE_Fortran_FLAGS ${DEFAULT_Fortran_FLAGS_DEBUG} CACHE STRING
       "The Fortran flags for this build type" FORCE)
-  ELSEIF(BT STREQUAL "TESTING")
+  ELSEIF(CMAKE_BUILD_TYPE STREQUAL "TESTING")
     SET(DEFAULT_Fortran_FLAGS ${DEFAULT_Fortran_FLAGS_BASIC}
       ${DEFAULT_Fortran_FLAGS_TESTING} CACHE STRING
       "Default compiler flags to use" FORCE)
@@ -273,9 +296,9 @@ IF(NOT DEFAULT_Fortran_FLAGS OR NOT CMAKE_BUILD_TYPE STREQUAL
       "The Fortran flags for this build type" FORCE)
   ENDIF()
 ENDIF()
+
 SET(BUILD_TYPE_USED_IN_FLAGS ${BT} CACHE STRING
   "The build type used to compute compiler flags" FORCE)
-message(${DEFAULT_Fortran_FLAGS})
 SET(RECOMPUTE_COMPILER_FLAGS FALSE CACHE BOOLEAN
   "Whether to compute compiler flags again, even if build type is unchanged. Defaults to FALSE."
   FORCE)

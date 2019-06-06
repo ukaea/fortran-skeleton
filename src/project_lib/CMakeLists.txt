@@ -37,7 +37,7 @@ ENDFOREACH()
 # the module files
 FILE(GLOB_RECURSE private_sources *.f90 *.F90)
 LIST(REMOVE_ITEM private_sources ${public_sources_abs})
-message(${private_sources})
+
 # Configure target for the private components of the library
 ADD_LIBRARY(${PROJECT_NAME}_lib_private STATIC ${private_sources})
 SET_PROPERTY(TARGET ${PROJECT_NAME}_lib_private PROPERTY

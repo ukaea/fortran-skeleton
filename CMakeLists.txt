@@ -50,10 +50,13 @@ ENDIF(NOT CMAKE_Fortran_COMPILER_SUPPORTS_F90)
 # will allow for better granularity of control over compiler options.
 INCLUDE(${CMAKE_MODULE_PATH}/SetFortranFlags.cmake)
 
-
-# Thie INCLUDE statement provides a set of functions to set up code
+# This INCLUDE statement provides a set of functions to set up code
 # coverage reports
 INCLUDE(${CMAKE_MODULE_PATH}/CodeCoverage.cmake)
+
+# This INCLUDE statement provides a functions to set up automatic
+# documentation
+INCLUDE(${CMAKE_MODULE_PATH}/MakeFordDocs.cmake)
 
 # There is an error in CMAKE with this flag for pgf90.  Unset it
 GET_FILENAME_COMPONENT(FCNAME ${CMAKE_Fortran_COMPILER} NAME)
@@ -83,6 +86,7 @@ ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME})
 ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tests)
 
 # Build the documentation
+ADD_FORD_DOCUMENTATION(docs ford-docs.md)
 
 # Export this project for use by others
 SET(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
@@ -109,7 +113,7 @@ CONFIGURE_PACKAGE_CONFIG_FILE(${CMAKE_CURRENT_LIST_DIR}/cmake/${PROJECT_NAME}Con
 )
 
 #Install the config and configversion files
-install(FILES
+INSTALL(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     DESTINATION ${INSTALL_CONFIGDIR}

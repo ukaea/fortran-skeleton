@@ -19,8 +19,7 @@ build_docs:
   script:
     - cd build
     - make docs
-  stage:
-    - build
+  stage: build
   artifacts:
     paths:
     - build/unit_test_coverage/

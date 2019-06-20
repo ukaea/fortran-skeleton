@@ -23,7 +23,7 @@ IF(CMAKE_BUILD_TYPE STREQUAL "TESTING")
   SETUP_TARGET_FOR_COVERAGE_GCOVR_HTML(
     NAME unit_test_coverage
     EXECUTABLE runtests
-    EXECUTABLE_ARGS -robust
+    EXECUTABLE_ARGS -robust -xml pfunit.xml -name UnitTests
     DEPENDENCIES runtests
   )
 ENDIF()

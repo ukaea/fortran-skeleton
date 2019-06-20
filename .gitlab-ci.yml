@@ -1,4 +1,6 @@
 image: cmacmackin/fortran-env:ubuntu-latest
+variables:
+  PATH: $HOME/.local/bin
 
 # Build your software, along with all tests
 compile:
@@ -17,6 +19,8 @@ build_docs:
   script:
     - cd build
     - make docs
+  stage:
+    - build
   artifacts:
     paths:
     - build/unit_test_coverage/
@@ -27,26 +31,17 @@ build_docs:
 unit_tests:
   script:
     - cd build
-    - tests/run_tests -robust -xml pfunit.xml -name UnitTests
-  stage: test
-#  Version of GitLab runner currently available at CCFE does not support this
-#  artifacts:
-#    reports:
-#      junit: pfunit.xml
-
-
-# Produce code coverage information
-gcov:
-  script:
-    - cd build
     - make unit_test_coverage
+    - tests/runtests -robust -xml pfunit.xml -name UnitTests
   stage: test
   coverage: '/^lines: (\d+.\d+)%/'
   artifacts:
     paths:
     - build/unit_test_coverage/
     expire_in: 1 week
-
+#   Version of GitLab runner currently available at CCFE does not support this
+#   reports:
+#     junit: pfunit.xml
 
 # Run all tests, e.g. integration tests, in addition to unit tests
 all_tests:
@@ -64,7 +59,7 @@ pages:
   stage: deploy
   dependencies:
     - build_docs
-    - gcov
+    - unit_tests
   artifacts:
     paths:
     - public/

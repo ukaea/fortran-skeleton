@@ -1,0 +1,72 @@
+image: cmacmackin/fortran-env:ubuntu-latest
+
+# Build your software, along with all tests
+compile:
+  script:
+    - mkdir build
+    - cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=TESTING
+    - make
+  stage: build
+  artifacts:
+    paths:
+    - build/
+    expire_in: 1 week
+
+build_docs:
+  script:
+    - cd build
+    - make docs
+  artifacts:
+    paths:
+    - build/unit_test_coverage/
+    expire_in: 1 day
+  allow_failure: true
+
+# Run unit tests, producing a report on results
+unit_tests:
+  script:
+    - cd build
+    - tests/run_tests -robust -xml pfunit.xml -name UnitTests
+  stage: test
+#  Version of GitLab runner currently available at CCFE does not support this
+#  artifacts:
+#    reports:
+#      junit: pfunit.xml
+
+
+# Produce code coverage information
+gcov:
+  script:
+    - cd build
+    - make unit_test_coverage
+  stage: test
+  coverage: '/^lines: (\d+.\d+)%/'
+  artifacts:
+    paths:
+    - build/unit_test_coverage/
+    expire_in: 1 week
+
+
+# Run all tests, e.g. integration tests, in addition to unit tests
+all_tests:
+  script:
+    - cd build
+    - ctest
+  stage: test
+
+
+# Deploy documentation and code coverage reports to GitLab pages
+pages:
+  script:
+    - mv docs ../public
+    - mv unit_test_coverage ../public/coverage
+  stage: deploy
+  dependencies:
+    - build_docs
+    - gcov
+  artifacts:
+    paths:
+    - public/
+  only:
+    - master

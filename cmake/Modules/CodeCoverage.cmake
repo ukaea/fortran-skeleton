@@ -174,7 +174,7 @@ function(SETUP_TARGET_FOR_COVERAGE_LCOV)
     # Show info where to find the report
     add_custom_command(TARGET ${Coverage_NAME} POST_BUILD
         COMMAND ;
-        COMMENT "Open ./${Coverage_NAME}/index.html in your browser to view the coverage report."
+        COMMENT "Open ./${Coverage_NAME}/index.html in your browser to view the full coverage report."
     )
 
 endfunction() # SETUP_TARGET_FOR_COVERAGE_LCOV
@@ -217,7 +217,7 @@ function(SETUP_TARGET_FOR_COVERAGE_GCOVR_XML)
         ${Coverage_EXECUTABLE} ${Coverage_EXECUTABLE_ARGS}
 
         # Running gcovr
-        COMMAND ${GCOVR_PATH} --xml
+        COMMAND ${GCOVR_PATH} --xml -s
             -r ${PROJECT_SOURCE_DIR} ${GCOVR_EXCLUDES}
             --object-directory=${PROJECT_BINARY_DIR}
             -o ${Coverage_NAME}.xml
@@ -229,7 +229,7 @@ function(SETUP_TARGET_FOR_COVERAGE_GCOVR_XML)
     # Show info where to find the report
     add_custom_command(TARGET ${Coverage_NAME} POST_BUILD
         COMMAND ;
-        COMMENT "Cobertura code coverage report saved in ${Coverage_NAME}.xml."
+        COMMENT "Full Cobertura code coverage report saved in ${Coverage_NAME}.xml."
     )
 
 endfunction() # SETUP_TARGET_FOR_COVERAGE_GCOVR_XML
@@ -275,7 +275,7 @@ function(SETUP_TARGET_FOR_COVERAGE_GCOVR_HTML)
         COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/${Coverage_NAME}
 
         # Running gcovr
-        COMMAND ${Python_EXECUTABLE} ${GCOVR_PATH} --html --html-details
+        COMMAND ${Python_EXECUTABLE} ${GCOVR_PATH} --html --html-details -s
             -r ${PROJECT_SOURCE_DIR} ${GCOVR_EXCLUDES}
             --object-directory=${PROJECT_BINARY_DIR}
             -o ${Coverage_NAME}/index.html
@@ -287,7 +287,7 @@ function(SETUP_TARGET_FOR_COVERAGE_GCOVR_HTML)
     # Show info where to find the report
     add_custom_command(TARGET ${Coverage_NAME} POST_BUILD
         COMMAND ;
-        COMMENT "Open ./${Coverage_NAME}/index.html in your browser to view the coverage report."
+        COMMENT "Open ./${Coverage_NAME}/index.html in your browser to view the full coverage report."
     )
 
 endfunction() # SETUP_TARGET_FOR_COVERAGE_GCOVR_HTML

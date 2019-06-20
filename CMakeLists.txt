@@ -35,6 +35,10 @@ PROJECT(projectname VERSION 0.0.1
 # Add our local modlues to the module path
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
+# Output a list of compilation commands for source files
+# (useful for on-the-fly syntax checking)
+SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # All new projects should use Fortran 90 features
 IF(NOT CMAKE_Fortran_COMPILER_SUPPORTS_F90)
     MESSAGE(FATAL_ERROR "Fortran compiler does not support F90")
@@ -83,6 +87,7 @@ ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/src/project_lib)
 ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME})
 
 # Add the source for the unit tests
+ENABLE_TESTING()
 ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/tests)
 
 # Build the documentation

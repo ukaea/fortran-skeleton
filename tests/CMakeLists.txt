@@ -1,11 +1,11 @@
-FIND_PACKAGE("pFUnit" REQUIRED)
+# This INCLUDE statement provides a wrapper functions to set up
+# pFUnit test suites
+INCLUDE(${CMAKE_MODULE_PATH}/pFUnit.cmake)
 
 # Must use relative paths for source files when passing to ADD_PFUNIT_TEST
-FILE(GLOB_RECURSE src_unittest RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.pf")
+FILE(GLOB_RECURSE src_unittest "*.pf")
 
-ENABLE_TESTING()
-
-ADD_PFUNIT_TEST(
+ADD_PFUNIT_TEST_SUITE(
   runtests        # Name of the test suite
   ${src_unittest} # The source files containing the unit tests
   ""              # List of extra Fortran files needed for testing
@@ -23,6 +23,7 @@ IF(CMAKE_BUILD_TYPE STREQUAL "TESTING")
   SETUP_TARGET_FOR_COVERAGE_GCOVR_HTML(
     NAME unit_test_coverage
     EXECUTABLE runtests
+    EXECUTABLE_ARGS -robust
     DEPENDENCIES runtests
   )
 ENDIF()

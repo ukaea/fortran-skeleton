@@ -13,16 +13,21 @@ compile:
     - build/
     expire_in: 1 week
 
+# Try building documentation, but still run unit tests if fail
 build_docs:
   script:
+    - mkdir build
     - cd build
+    - cmake ..
     - make docs
   stage: build
   artifacts:
     paths:
-    - build/unit_test_coverage/
+    - build/docs/
     expire_in: 1 day
   allow_failure: true
+
+
 
 # Run unit tests, producing a report on results
 unit_tests:
@@ -46,6 +51,7 @@ all_tests:
     - cd build
     - ctest
   stage: test
+
 
 
 # Deploy documentation and code coverage reports to GitLab pages

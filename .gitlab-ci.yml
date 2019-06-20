@@ -34,7 +34,6 @@ unit_tests:
   script:
     - cd build
     - make unit_test_coverage
-    - tests/runtests -robust -xml pfunit.xml -name UnitTests
   stage: test
   coverage: '/^lines: (\d+.\d+)%/'
   artifacts:

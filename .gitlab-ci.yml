@@ -1,6 +1,4 @@
 image: cmacmackin/fortran-env:ubuntu-latest
-variables:
-  PATH: $HOME/.local/bin
 
 # Build your software, along with all tests
 compile:

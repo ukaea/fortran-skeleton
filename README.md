@@ -1,6 +1,6 @@
 # Fortran Project Skeleton
 
-[![pipeline status](https://git.ccfe.ac.uk/%{project_path}/badges/%{default_branch}/pipeline.svg)](https://git.ccfe.ac.uk/%{project_path}/pipelines)
+[![pipeline status](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/badges/master/pipeline.svg)](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/commits/master)
 [![coverage report](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/badges/master/coverage.svg)](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/commits/master)
 
 This repository provides the skeleton of a Fortran project. It can be

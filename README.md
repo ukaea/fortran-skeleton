@@ -1,6 +1,6 @@
 # Fortran Project Skeleton
 
-[![pipeline status](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/badges/master/pipeline.svg)](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/commits/master)
+[![pipeline status](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/badges/master/pipeline.svg)](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/pipelines)
 [![coverage report](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/badges/master/coverage.svg)](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/commits/master)
 
 This repository provides the skeleton of a Fortran project. It can be
@@ -19,7 +19,7 @@ git init
 This will download the files onto your computer and create a new git
 repository. You will also need to install the following software
 (needed during the build and testing process) on your computer:
-gfortran, cmake, graphviz, FORD, and gcovr. On Ubuntu this can be
+[gfortran](https://gcc.gnu.org/wiki/GFortran), [cmake](https://cmake.org), [graphviz](https://www.graphviz.org/), [FORD](https://github.com/Fortran-FOSS-Programmers/ford), and [gcovr](https://www.gcovr.com/en/stable/#). On Ubuntu this can be
 achieved by running
 ```
 sudo apt-get install python-pip gfortran cmake graphviz gcovr
@@ -27,7 +27,7 @@ sudo pip install ford
 ```
 Finally, you will need to build the
 [pFUnit](http://pfunit.sourceforge.net/) framework on your computer so
-you can run unit tests. This should be done using `cmake`, adapting
+you can run unit tests. This should be done using CMake, adapting
 installation directory and other configurations as necessary:
 ```
 pfdir=$HOME/.pfunit
@@ -65,12 +65,13 @@ You should then do the following to customise your new project:
 8. Replace the contents of this README with a description of your own project.
 9. Commit your changes and push your new repository to GitLab.
 10. Set up various configurations in the GitLab and consider making a
-    wiki.
+    wiki. Under Settings > CI/CD > General pipelines > Test coverage
+    parsing, specify the regular expression `^lines: (\d+.\d+)%`.
 
 
 ## CMake Build
 
-Some basic configurations for `cmake` are provided. These are
+Some basic configurations for [CMake](https://cmake.org) are provided. These are
 (heavily) adapted from the template provided by [Seth Morton on
 GitHub](https://github.com/SethMMorton/cmake_fortran_template) and
 also feature a module from [Larse
@@ -128,12 +129,14 @@ tests will need to link against. The tests will then automatically be
 built when invoking `make all`.
 
 The tests can then either be run directly by executing
-`tests/runtests` from within the build directory or by running `ctest`
-from there. The latter will also run any additional tests which you
-have [configured in your
+`tests/unit_tests` from within the build directory or by running
+`ctest` from there. The latter will also run any additional tests
+which you have [configured in your
 CMakeLists.txt](https://gitlab.kitware.com/cmake/community/wikis/doc/ctest/Testing-With-CTest)
-files. This could be useful to provide integration and regression
-tests.
+files. As an example, a simple integration test called
+`executable_test` was configured here. This simply runs the executable
+produced when building this project and checking the format of the
+output.
 
 You should write unit tests which cover as much of your code as
 possible (ideally approaching 100%). The [gcovr

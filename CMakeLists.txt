@@ -25,7 +25,7 @@
 # Copyright (c) 2018 Seth M. Morton
 #
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.10.2)
 
 PROJECT(projectname VERSION 0.0.1
   DESCRIPTION "A Fortran project"

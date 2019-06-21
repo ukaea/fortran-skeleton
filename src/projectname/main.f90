@@ -40,5 +40,6 @@ program program_name
   double_precision_var = 1._dp
   single_precision_var = 2._sp
   short_var = int(real(double_precision_var, sp) + single_precision_var, i4)
-
+  print*, 'These are some numbers: ', double_precision_var, &
+       single_precision_var, short_var
 end program program_name

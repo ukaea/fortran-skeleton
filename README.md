@@ -1,9 +1,11 @@
 # Fortran Project Skeleton
 
 [![pipeline status](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/badges/master/pipeline.svg)](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/pipelines)
-[![Unit test coverage](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/badges/master/coverage.svg?job=unit_tests)](http://cmacmack.gitpages.ccfe.ac.uk/fortran/unit_coverage/)
-[![All test coverage](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/badges/master/coverage.svg?job=all_tests)](http://cmacmack.gitpages.ccfe.ac.uk/fortran/all_coverage/)
 [![Documentation](https://img.shields.io/badge/docs-FORD-steelblue.svg)](http://cmacmack.gitpages.ccfe.ac.uk/fortran/)
+
+Unit tests: [![Unit test coverage](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/badges/master/coverage.svg?job=unit_tests)](http://cmacmack.gitpages.ccfe.ac.uk/fortran/unit_coverage/)  
+All tests: &nbsp;&nbsp; [![All test coverage](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/badges/master/coverage.svg?job=all_tests)](http://cmacmack.gitpages.ccfe.ac.uk/fortran/all_coverage/)
+
 
 This repository provides the skeleton of a Fortran project. It can be
 used as a template when beginning a new piece of Fortran software.

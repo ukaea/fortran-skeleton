@@ -1,7 +1,9 @@
 # Fortran Project Skeleton
 
 [![pipeline status](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/badges/master/pipeline.svg)](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/pipelines)
-[![coverage report](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/badges/master/coverage.svg)](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/commits/master)
+[![Unit test coverage](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/badges/master/coverage.svg?job=unit_tests)](http://cmacmack.gitpages.ccfe.ac.uk/fortran/unit_coverage/)
+[![All test coverage](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran/badges/master/coverage.svg?job=all_tests)](http://cmacmack.gitpages.ccfe.ac.uk/fortran/all_coverage/)
+[![Documentation](https://img.shields.io/badge/docs-FORD-steelblue.svg)](http://cmacmack.gitpages.ccfe.ac.uk/fortran/)
 
 This repository provides the skeleton of a Fortran project. It can be
 used as a template when beginning a new piece of Fortran software.
@@ -67,16 +69,17 @@ You should then do the following to customise your new project:
 10. Set up various configurations in the GitLab and consider making a
     wiki. Under Settings > CI/CD > General pipelines > Test coverage
     parsing, specify the regular expression `^lines: (\d+.\d+)%`.
+11. Set badges for your project under Settings > General > Badges,
+    using the ones in this README as an example.
 
 
 ## CMake Build
 
-Some basic configurations for [CMake](https://cmake.org) are provided. These are
-(heavily) adapted from the template provided by [Seth Morton on
-GitHub](https://github.com/SethMMorton/cmake_fortran_template) and
-also feature a module from [Larse
-Bilke](https://github.com/bilke/cmake-modules). The build system was
-refactored to comply with [modern CMake best
+Some basic configurations for [CMake](https://cmake.org) are
+provided. These are (heavily) adapted from the template provided by
+[Seth Morton on
+GitHub](https://github.com/SethMMorton/cmake_fortran_template). The
+build system was refactored to comply with [modern CMake best
 practice](https://pabloariasal.github.io/2018/02/19/its-time-to-do-cmake-right/),
 adapted slightly to account for differences between Fortran and C++.
 
@@ -181,7 +184,8 @@ the code, from a _project file_, in this case called
 build the documentation for you. Simply run `make docs` in the build
 directory. As [described below](#continuous-integration), this project
 is configured so that GitLab's continuous integration service will
-generate and deploy this documentation.
+generate and deploy this documentation ([see an example
+here](http://cmacmack.gitpages.ccfe.ac.uk/fortran/)).
 
 You should write tutorials explaining how to use your software as
 well. Depending on the software in question it may also be useful to
@@ -210,6 +214,7 @@ this project, the CI configurations do the following:
 - try to build API documentation
 - run unit tests and produce coverage reports
 - run any other tests
+- check that cmake has been configured to install the project correctly
 - if on the `master` branch, deploy documentation and code coverage to [GitLab pages](https://git.ccfe.ac.uk/help/user/project/pages/index.md)
 
 These configurations mostly rely on CMake to do the hard work and
@@ -223,6 +228,17 @@ image](https://cloud.docker.com/u/cmacmackin/repository/docker/cmacmackin/fortra
 is used which provide all of the tools necessary to build and test
 this project, plus some commonly used libraries such as MPICH, BLAS,
 and LAPACK.
+
+Unfortunately, the current version of GitLab is not able to host pages
+for projects within sub-groups, such as this one. As such, the
+automatic deployment and hosting of documentation and code coverage
+reports can not be easily demonstrated. See a [fork of this
+repository] for a demonstration of this feature in action for
+[documentation](http://cmacmack.gitpages.ccfe.ac.uk/fortran/), [unit
+test
+coverage](http://cmacmack.gitpages.ccfe.ac.uk/fortran/unit_coverage/),
+and [coverage for all
+tests](http://cmacmack.gitpages.ccfe.ac.uk/fortran/all_coverage/).
 
 
 ## License

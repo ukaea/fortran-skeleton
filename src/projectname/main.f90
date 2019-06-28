@@ -29,12 +29,14 @@ program program_name
   
   ! Import modules...
   use variable_kinds, only: sp, dp, i4
+  use type_library, only: derived_type
   implicit none
 
   ! Decalare variables...
   real(dp)    :: double_precision_var
   real(sp)    :: single_precision_var
   integer(i4) :: short_var
+  type(derived_type) :: object
   
   ! Run your program...
   double_precision_var = 1._dp
@@ -42,4 +44,5 @@ program program_name
   short_var = int(real(double_precision_var, sp) + single_precision_var, i4)
   print*, 'These are some numbers: ', double_precision_var, &
        single_precision_var, short_var
+  object = derived_type("Testing whether library dynamically linked")
 end program program_name

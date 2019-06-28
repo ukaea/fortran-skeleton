@@ -8,3 +8,4 @@ include/
 lib/
 *.a
 *.so
+tests/test_install/CMakeLists.txt

@@ -54,10 +54,6 @@ ENDIF(NOT CMAKE_Fortran_COMPILER_SUPPORTS_F90)
 # will allow for better granularity of control over compiler options.
 INCLUDE(${CMAKE_MODULE_PATH}/SetFortranFlags.cmake)
 
-# This INCLUDE statement provides a set of functions to set up code
-# coverage reports
-INCLUDE(${CMAKE_MODULE_PATH}/CodeCoverage.cmake)
-
 # This INCLUDE statement provides a functions to set up automatic
 # documentation
 INCLUDE(${CMAKE_MODULE_PATH}/MakeFordDocs.cmake)
@@ -75,9 +71,8 @@ ENDIF(FCNAME STREQUAL "pgf90")
 INCLUDE(GNUInstallDirs)
 
 # Define the name of the unit test binary
-SET(TEST_EXE unittests)
-SET(LIBDIR ${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME})
-SET(INCDIR ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
+SET(LIBDIR ${CMAKE_INSTALL_FULL_LIBDIR}/${PROJECT_NAME})
+SET(INCDIR ${CMAKE_INSTALL_FULL_INCLUDEDIR}/${PROJECT_NAME})
 
 # The source for the libraries
 ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/src/environment_lib)
@@ -117,15 +112,16 @@ CONFIGURE_PACKAGE_CONFIG_FILE(${CMAKE_CURRENT_LIST_DIR}/cmake/${PROJECT_NAME}Con
     PATH_VARS INSTALL_CONFIGDIR
 )
 
-#Install the config and configversion files
+# Install the config and configversion files
 INSTALL(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     DESTINATION ${INSTALL_CONFIGDIR}
 )
 
-
-# Add a distclean target to the Makefile
-ADD_CUSTOM_TARGET(distclean 
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/distclean.cmake
+# Install the documentation
+INSTALL(DIRECTORY
+  ${CMAKE_CURRENT_BINARY_DIR}/docs/
+  DESTINATION ${CMAKE_INSTALL_DOCDIR}
+  OPTIONAL MESSAGE_NEVER
 )

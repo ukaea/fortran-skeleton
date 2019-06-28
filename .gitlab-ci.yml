@@ -33,7 +33,9 @@ build_docs:
 unit_tests:
   script:
     - cd build
-    - make unit_test_coverage
+    - tests/unit_tests -robust -xml pfunit.xml -name UnitTests
+    - make gcovr
+    - mv gcovr unit_test_coverage
   stage: test
   coverage: '/^lines: (\d+.\d+)%/'
   artifacts:
@@ -49,19 +51,42 @@ all_tests:
   script:
     - cd build
     - ctest
+    - make gcovr
+    - mv gcovr all_test_coverage
   stage: test
+  coverage: '/^lines: (\d+.\d+)%/'
+  artifacts:
+    paths:
+    - build/all_test_coverage/
+    expire_in: 1 week
 
+# Test that cmake installs everything correctly so that programs can
+# be executed and libraries linked to
+install_test:
+  script:
+    - cd build
+    - make install
+    # Ensure that the program has installed in the PATH
+    - projectname
+    # Try using these libraries in another cmake project
+    - cd tests/test_installation
+    - cmake
+    - make
+    - ./test_program
+  stage: test
 
 
 # Deploy documentation and code coverage reports to GitLab pages
 pages:
   script:
     - mv build/docs public
-    - mv build/unit_test_coverage public/coverage
+    - mv build/unit_test_coverage public/unit_coverage
+    - mv build/all_test_coverage public/all_coverage
   stage: deploy
   dependencies:
     - build_docs
     - unit_tests
+    - all_tests
   artifacts:
     paths:
     - public/

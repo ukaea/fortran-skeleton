@@ -2,6 +2,10 @@
 # pFUnit test suites
 INCLUDE(${CMAKE_MODULE_PATH}/pFUnit.cmake)
 
+# Set up to generate coverage reports
+FIND_PACKAGE(PythonInterp REQUIRED)
+find_program(GCOVR_PATH gcovr PATHS ${CMAKE_SOURCE_DIR}/scripts/test)
+
 # Add unit tests
 FILE(GLOB_RECURSE src_unittest "*.pf")
 ADD_PFUNIT_TEST_SUITE(
@@ -27,11 +31,27 @@ SET_TESTS_PROPERTIES(executable_test PROPERTIES
 
 # Generate a coverage report for unit tests
 IF(CMAKE_BUILD_TYPE STREQUAL "TESTING")
-  SETUP_TARGET_FOR_COVERAGE_GCOVR_HTML(
-    NAME unit_test_coverage
-    EXECUTABLE unit_tests
-    EXECUTABLE_ARGS -robust -xml pfunit.xml -name UnitTests
-    DEPENDENCIES unit_tests
+  add_custom_target(gcovr
+    # Create folder
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/gcovr
+    
+    # Running gcovr
+    COMMAND ${Python_EXECUTABLE} ${GCOVR_PATH} --html --html-details -s
+            -r ${PROJECT_SOURCE_DIR} --object-directory=${PROJECT_BINARY_DIR}
+            -o gcovr/index.html
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+    COMMENT "Running gcovr to produce HTML code coverage report."
   )
-
+  # Show info where to find the report
+  add_custom_command(TARGET gcovr POST_BUILD
+    COMMAND ;
+    COMMENT "Open ./gcovr/index.html in your browser to view the full coverage report."
+  )
 ENDIF()
+
+# Setup up a test project which will check libraries were installed
+# properly and the CMake export worked as planned.
+CONFIGURE_FILE(test_installation/CMakeLists.txt.in
+  test_installation/CMakeLists.txt)
+CONFIGURE_FILE(test_installation/test_program.f90
+  test_installation/test_program.f90 COPYONLY)

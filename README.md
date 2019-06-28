@@ -110,13 +110,15 @@ information describing which lines of source files have been
 executed. Finally `RELEASE` provides full optimisation (it is worth
 experimenting with these settings, as the most aggressive optimisation
 is not always the fastest) and does not offer any run-time checks,
-debugger information, or instrumentation.
+debugger information, or instrumentation. If you wish to install to a
+non-standard location, you can specify
+`-DCMAKE_INSTALL_PREFIX=<INSTALL-LOCATION>` when invoking CMake.
 
 
 ## Testing and Test Coverage
 
 An example of using pFUnit for unit testing is provided in the
-[tests][tests/] directory. pFUnit files (ending in .pf) are Fortran
+[tests](tests/) directory. pFUnit files (ending in .pf) are Fortran
 files with a [few additional
 directives](http://pfunit.sourceforge.net/page_pFUnitParser.html)
 included to indicate which routines implement tests and to provide

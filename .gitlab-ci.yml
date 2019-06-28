@@ -66,11 +66,12 @@ install_test:
   script:
     - cd build
     - make install
-    # Ensure that the program has installed in the PATH
+    # Ensure that the program has installed in the PATH and runs
+    - which projectname
     - projectname
     # Try using these libraries in another cmake project
     - cd tests/test_installation
-    - cmake
+    - cmake .
     - make
     - ./test_program
   stage: test

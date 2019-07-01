@@ -151,7 +151,8 @@ tool](https://www.gcovr.com/en/stable/) can be used to analyse this,
 providing both an overall coverage percentage and a line-by-line
 report. CMake has been configured to handle any tricky details
 involved in this. To generate coverage reports for your unit tests,
-run `make unit_test_coverage` from withing the build directory.
+run `make gcovr` from withing the build directory after having run
+them.
 
 
 ## Documentation
@@ -215,7 +216,7 @@ this project, the CI configurations do the following:
 - compile your code
 - try to build API documentation
 - run unit tests and produce coverage reports
-- run any other tests
+- run any other tests and produce coverage reports
 - check that cmake has been configured to install the project correctly
 - if on the `master` branch, deploy documentation and code coverage to [GitLab pages](https://git.ccfe.ac.uk/help/user/project/pages/index.md)
 
@@ -235,7 +236,8 @@ Unfortunately, the current version of GitLab is not able to host pages
 for projects within sub-groups, such as this one. As such, the
 automatic deployment and hosting of documentation and code coverage
 reports can not be easily demonstrated. See a [fork of this
-repository] for a demonstration of this feature in action for
+repository](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran)
+for a demonstration of this feature in action for
 [documentation](http://cmacmack.gitpages.ccfe.ac.uk/fortran/), [unit
 test
 coverage](http://cmacmack.gitpages.ccfe.ac.uk/fortran/unit_coverage/),

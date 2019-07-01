@@ -236,7 +236,7 @@ Unfortunately, the current version of GitLab is not able to host pages
 for projects within sub-groups, such as this one. As such, the
 automatic deployment and hosting of documentation and code coverage
 reports can not be easily demonstrated. See a [fork of this
-repository](https://git.ccfe.ac.uk/soft-eng-group/rse/skeleton-repositories/fortran)
+repository](https://git.ccfe.ac.uk/cmacmack/fortran)
 for a demonstration of this feature in action for
 [documentation](http://cmacmack.gitpages.ccfe.ac.uk/fortran/), [unit
 test

@@ -247,9 +247,11 @@ tests](http://cmacmack.gitpages.ccfe.ac.uk/fortran/all_coverage/).
 
 ## License
 
-UKAEA does not currently have a policy on what licence your code
-should be released under. However, the GNU Lesser General Public
-License (LGPL) is a good choice. This allows anyone to use and modify
+The texts of the LGPL and GPL (version 3) are included in this
+template and should not be deleted if you wish to use this
+license.
+
+The GNU Lesser General Public License (LGPL) allows anyone to use and modify
 your software providing the derivatives are similarly
 licensed. However, unlike the stronger GNU General Public License
 (GPL), it still allows unmodified libraries to be used by proprietary
@@ -257,9 +259,9 @@ or otherwise differently licensed software. For more on the different
 free and open source software licenses available, see
 [choosealicense.com](https://choosealicense.com/licenses/).
 
-The texts of the LGPL and GPL (version 3) are included in this
-template and should not be deleted if you wish to use this
-license. Notifications of licensing are provided at the top of all
+Please follow your own organisation's guidance on the choice of a license.
+
+Notifications of licensing are provided at the top of all
 example source files. See the [GNU project for more
 details](https://www.gnu.org/licenses/gpl-howto.html) on using their
 licenses. __However, the inclusion of (L)GPL documents in this
